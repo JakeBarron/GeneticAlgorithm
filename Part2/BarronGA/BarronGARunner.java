@@ -25,25 +25,16 @@ TODO:
 **/
 
 public class BarronGARunner {
-	//Scanner to read input file
-	private static File file;
-	private static Scanner input;
 
 	public static void main(String[] args) {
-		
-		//read file input
-		try {
-			file = new File(args[0]);
-			input = new Scanner(file);
-			//skip first line
-			input.nextLine();
-			System.out.println(input.nextLine());
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 
+	Integer test = 0;
+	test++;
+	System.out.println(test);
 
-
+	Chromosome testChrome = new Chromosome(10);
+	testChrome.initializeChrom();
+	System.out.print(testChrome);
 	}
 
 }
