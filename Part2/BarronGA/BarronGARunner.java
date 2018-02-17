@@ -28,13 +28,15 @@ public class BarronGARunner {
 
 	public static void main(String[] args) {
 
-	Integer test = 0;
-	test++;
-	System.out.println(test);
+	String sequence = args[0];
+		for(int i = 0; i < 100; i++) {
+			Chromosome testChrome = new Chromosome(sequence);
+			testChrome.initializeChrom();
+			System.out.print("size: " + testChrome.getSize());
+			System.out.print(testChrome);
 
-	Chromosome testChrome = new Chromosome(10);
-	testChrome.initializeChrom();
-	System.out.print(testChrome);
+			testChrome.computeFitness();
+		}
 	}
 
 }

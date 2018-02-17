@@ -9,27 +9,39 @@ import java.util.Random;
 
 public class Chromosome {
 	private static Random random = new Random();
-	private int Fitness;
+	private int fitness;
 	private int[] X;
 	private int[] Y;
 	private boolean[] color;
 	private int size;
+	private String sequence;
 
-	public Chromosome(int size) {
-		this.X = new int[size];
-		this.Y = new int[size];
-		this.color = new boolean[size];
-		this.size = size;
+	public Chromosome(String sequence) {
+		this.size = sequence.length();
+		this.X = new int[this.size];
+		this.Y = new int[this.size];
+		this.color = new boolean[this.size];
+		this.sequence = sequence;
+		this.fitness = 0;
+		this.colorSequence();
+
 	}
 
 	public int getX(int index) {
-		return X[index];
+		return this.X[index];
 	}
 
 	public int getY(int index) {
-		return Y[index];
+		return this.Y[index];
 	}
 
+	public boolean getColor(int index) {
+		return this.color[index];
+	}
+
+	public int getSize() {
+		return this.size;
+	}
 	//Method to give chromosome initial legal structure
 	public void initializeChrom() {
 		//always initialize to (0,0)
@@ -124,18 +136,33 @@ public class Chromosome {
 	}
 
 	public int computeFitness() {
-		int fitness = 0;
-
-
-
+		boolean[][] chromosomeGraph = new boolean[this.size*2][this.size*2];
+		for(int i = 0; i < this.size; i++) {
+			if(color[i]) {
+				chromosomeGraph[X[i]+size][Y[i]+size] = true;
+			}
+		}
+		//print
+		for (int i = 0; i < chromosomeGraph.length; i++) {
+    		for (int j = 0; j < chromosomeGraph[i].length; j++) {
+        		System.out.print(chromosomeGraph[i][j] + " ");
+    	}
+    	System.out.println();
+		}
 		return fitness;
+	}
+
+	private void colorSequence() {
+		for(int i = 0; i < this.size; i++) {
+			color[i] = (this.sequence.charAt(i) == 'h');
+		}
 	}
 
 	@Override
 	public String toString() {
 		String string = "";
 		for(int c = 0; c < this.size; c++) {
-		string = string + String.format("| (%d, %d) |\n", getX(c), getY(c));
+		string = string + String.format("| (%d, %d, %s) |\n", this.getX(c), this.getY(c), (this.getColor(c) ? "black" : "white"));
 		}
 		return string;
 	}
