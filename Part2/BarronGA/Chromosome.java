@@ -84,7 +84,7 @@ public class Chromosome {
 				}//end switch	
 			} //end if else
 			//switch for next direction
-			System.out.println(nextDirection);
+			//System.out.println(nextDirection);
 			switch(nextDirection) {
 				case 1: this.X[i] = (this.X[i-1]) + 1;
 						this.Y[i] = this.Y[i-1];
@@ -115,7 +115,7 @@ public class Chromosome {
 	public String toString() {
 		String string = "";
 		for(int c = 0; c < this.size; c++) {
-		string = string + String.format("(%d, %d), ", getX(c), getY(c));
+		string = string + String.format("| (%d, %d) |\n", getX(c), getY(c));
 		}
 		return string;
 	}
