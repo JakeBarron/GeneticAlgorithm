@@ -1,0 +1,35 @@
+TotalProtein = 14
+Seq = pphpphhpphhppppphhhhhhhhhhpppppphhpphhpphpphhhhh
+Fitness = -22
+Seq = hhhhhhhhhhhhphphpphhpphhpphpphhpphhpphpphhpphhpphphphhhhhhhhhhhh
+Fitness = -42
+Seq = pphhhphhhhhhhhppphhhhhhhhhhphppphhhhhhhhhhhhpppphhhhhhphhphp
+Fitness = -34
+Seq = pphpphhpppphhpppphhpppphh
+Fitness = -8
+Seq = hphpphhphpphphhpphph
+Fitness = -9
+Seq = hhhpphphphpphphphpph
+Fitness = -10
+Seq = hhphphphphhhhphppphppphpppphppphppphphhhhphphphphh
+Fitness = -21
+Seq = hhhpphphphpphphphpph
+Fitness = -10
+Seq = hphpphhphpphphhpphph
+Fitness = -9
+Seq = ppphhpphhppppphhhhhhhpphhpppphhpphpp
+Fitness = -14
+Seq = hhpphpphpphpphpphpphpphh
+Fitness = -9
+Seq = hhhhhhhhhhhhphphhhpphhhpphhhhpphhhpphhhphphhhhhhhhhhhh
+Fitness = -42
+Seq = hhhhhhhhhhhhphphhhhhhhhhhhhhhhhphphhhhhhhhhhhh
+Fitness = -42
+Seq = hhhhhhhhhhhhphphpphhpphhpphpphhpphhpphpphhpphhpphphphhhhhhhhhhhh
+Fitness = -42
+
+
+
+
+
+
