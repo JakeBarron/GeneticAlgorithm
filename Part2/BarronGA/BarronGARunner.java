@@ -11,8 +11,8 @@ import java.io.*;
 
 /**
 TODO:
-	0. data structure for chromosome
-	1. Initialization (Pop1)
+	0. data structure for chromosome \
+	1. Initialization and validation (Pop1) \
 	2. Compute Fitness (Pop1, for all chromosome Ci)
 	3. Sort (Pop1)
 	4. Examine: C1/Progress or Max_gen, Exit()?
