@@ -13,6 +13,7 @@ public class Chromosome {
 	private int[] X;
 	private int[] Y;
 	private boolean[] color;
+	private int[] folds;
 	private int size;
 	private String sequence;
 
@@ -21,10 +22,10 @@ public class Chromosome {
 		this.X = new int[this.size];
 		this.Y = new int[this.size];
 		this.color = new boolean[this.size];
+		//holds directional history
+		this.folds = new int[this.size];
 		this.sequence = sequence;
-		this.fitness = 0;
 		this.colorSequence();
-
 	}
 
 	public int getX(int index) {
@@ -42,14 +43,24 @@ public class Chromosome {
 	public int getSize() {
 		return this.size;
 	}
+
+	public int[] getFolds() {
+		return this.folds;
+	}
+
+	public int getFitness() {
+		return this.fitness;
+	}
 	//Method to give chromosome initial legal structure
 	public void initializeChrom() {
 		//always initialize to (0,0)
 		X[0] = 0;
 		Y[0] = 0;
+		folds[0] = 0;
 		//then (0,1)
 		X[1] = 0;
 		X[1] = 1;
+		folds[1] = 1;
 		//integers to hold last and next directions
 		int lastDirection = 1;
 		int nextDirection = 0;
@@ -101,6 +112,7 @@ public class Chromosome {
 				} //end if else
 				//switch for next direction
 				//System.out.println(nextDirection);
+				folds[i] = nextDirection;
 				switch(nextDirection) {
 					case 1: this.X[i] = (this.X[i-1]) + 1;
 							this.Y[i] = this.Y[i-1];
@@ -124,7 +136,7 @@ public class Chromosome {
 	private boolean validate() {
 		boolean isValid = true;
 		for(int i = 0; i < size; i++) {	
-			for(int j = i+1; j < size-1; j++) {
+			for(int j = i+1; j < size; j++) {
 				if(X[i] == X[j] && Y[i] == Y[j]) {
 					isValid = false;
 					System.out.println("invalid structure! REPEATING.");
@@ -136,21 +148,44 @@ public class Chromosome {
 	}
 
 	public int computeFitness() {
+		//compute initial fitness, assuming valid folds
+		for(int i = 0; i < this.sequence.length()-1; i++) {
+			if((this.sequence.charAt(i) == 'h') && (this.sequence.charAt(i+1) == 'h')) {
+				//fitness is negative and bonded black amino acids are guaranteed to reduce fitness.
+				fitness++;
+			}
+		}
+		//construct matrix structure
 		boolean[][] chromosomeGraph = new boolean[this.size*2][this.size*2];
 		for(int i = 0; i < this.size; i++) {
 			if(color[i]) {
 				chromosomeGraph[X[i]+size][Y[i]+size] = true;
 			}
 		}
-		//print
+		// //scan matrix to look for adjacent unbonded blacks
+		for(int i = 0; i < (size*2) - 1; i++){
+			for(int j = 0; j < size*2 - 1; j++) {
+				//if current amino acid is black
+				if(chromosomeGraph[i][j]) {
+					//if 1 forward or 1 down is also black decrement fitness
+					if(chromosomeGraph[i+1][j])
+						fitness--;
+					if(chromosomeGraph[i][j+1])
+						fitness--;
+				}
+			}
+		}
+		//print matrix
 		for (int i = 0; i < chromosomeGraph.length; i++) {
+			System.out.print("|");
     		for (int j = 0; j < chromosomeGraph[i].length; j++) {
-        		System.out.print(chromosomeGraph[i][j] + " ");
-    	}
-    	System.out.println();
+        		System.out.printf("%s|" ,chromosomeGraph[i][j] ? "b" : " ");
+        		//System.out.printf("[%d, %d]", i, j);
+    		}
+    		System.out.print("\n");
 		}
 		return fitness;
-	}
+	}//end computeFitness
 
 	private void colorSequence() {
 		for(int i = 0; i < this.size; i++) {

@@ -29,14 +29,15 @@ public class BarronGARunner {
 	public static void main(String[] args) {
 
 	String sequence = args[0];
-		for(int i = 0; i < 100; i++) {
+		//for(int i = 0; i < 100; i++) {
 			Chromosome testChrome = new Chromosome(sequence);
 			testChrome.initializeChrom();
-			System.out.print("size: " + testChrome.getSize());
+			//System.out.print("size: " + testChrome.getSize() + "\n");
 			System.out.print(testChrome);
+			int[] folds = testChrome.getFolds();
 
-			testChrome.computeFitness();
-		}
+			System.out.print(testChrome.computeFitness());
+		//}
 	}
 
 }
