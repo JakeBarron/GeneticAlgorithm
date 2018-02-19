@@ -163,24 +163,6 @@ public class Chromosome {
 			}
 		}
 
-		//construct matrix structure for print testing vvvvvvvvvvvvvvvv
-		int[][] printableMatrix = new int[this.size*2][this.size*2];
-		//construct testing matrix
-		for(int i = 0; i < (size*2) - 1; i++){
-			for(int j = 0; j < size*2 - 1; j++) {
-				printableMatrix[i][j] = 2;
-			}
-		}
-
-		for(int i = 0; i < this.size; i++) {
-			if(color[i]) {
-				printableMatrix[X[i]+size][Y[i]+size] = 1;
-			} else {
-				printableMatrix[X[i]+size][Y[i]+size] = 0;
-			} 
-		}	
-		// ^^^^^^^^^^^^^^^^^test^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 		// //scan matrix to look for adjacent unbonded blacks
 		for(int i = 0; i < (size*2) - 1; i++){
 			for(int j = 0; j < size*2 - 1; j++) {
@@ -194,23 +176,8 @@ public class Chromosome {
 				}
 			}
 		}
-		//print test matrix ******************************************
-		for (int i = 0; i < printableMatrix.length; i++) {
-			System.out.print("|");
-    		for (int j = 0; j < printableMatrix[i].length; j++) {
-    			switch(printableMatrix[i][j]){
-    				case 0: System.out.printf("%s|", "w");
-    						break;
-    				case 1: System.out.printf("%s|", "b");
-    						break;
-    				case 2: System.out.printf("%s|", " ");
-    			}
-        		//System.out.printf("%s|" ,chromosomeGraph[i][j] ? "b" : " ");
-        		//System.out.printf("[%d, %d]", i, j);
-    		}
-    		System.out.print("\n");
-		} 
-		// ******************test************************************
+
+		visualizeChromosome();
 		return fitness;
 	}//end computeFitness
 
@@ -228,5 +195,39 @@ public class Chromosome {
 		}
 		return string;
 	}
+
+	public void visualizeChromosome() {
+		//construct matrix structure for print testing vvvvvvvvvvvvvvvv
+		int[][] printableMatrix = new int[this.size*2][this.size*2];
+		//construct testing matrix
+		for(int i = 0; i < (size*2) - 1; i++){
+			for(int j = 0; j < size*2 - 1; j++) {
+				printableMatrix[i][j] = 2;
+			}
+		}
+
+		for(int i = 0; i < this.size; i++) {
+			if(color[i]) {
+				printableMatrix[X[i]+size][Y[i]+size] = 1;
+			} else {
+				printableMatrix[X[i]+size][Y[i]+size] = 0;
+			} 
+		}	
+		for (int i = 0; i < printableMatrix.length; i++) {
+			System.out.print("|");
+    		for (int j = 0; j < printableMatrix[i].length; j++) {
+    			switch(printableMatrix[i][j]){
+    				case 0: System.out.printf("%s|", "w");
+    						break;
+    				case 1: System.out.printf("%s|", "b");
+    						break;
+    				case 2: System.out.printf("%s|", " ");
+    			}
+        		//System.out.printf("%s|" ,chromosomeGraph[i][j] ? "b" : " ");
+        		//System.out.printf("[%d, %d]", i, j);
+    		}
+    		System.out.print("\n");
+		} 
+	}//end visualizeChromosome
 
 }//end Chromsome
