@@ -7,7 +7,7 @@ import java.util.Random;
 		class to hold chromosome structure
 	**/
 
-public class Chromosome {
+public class Chromosome implements Comparable<Chromosome> {
 	private static Random random = new Random();
 	private int fitness;
 	private int[] X;
@@ -51,7 +51,8 @@ public class Chromosome {
 	public int getFitness() {
 		return this.fitness;
 	}
-	//Method to give chromosome initial legal structure
+
+	//Method to give chromosome initial legal structure and then calls compute fitness
 	public void initializeChrom() {
 		//always initialize to (0,0)
 		X[0] = 0;
@@ -131,28 +132,36 @@ public class Chromosome {
 				lastDirection = nextDirection;
 			} //end for
 		}while(!validate());//end while
+		this.computeFitness();
 	} //end initializeChrom
 
+	/*
+		validate
+		@returns isValid whether or not the structure is legal
+	*/
 	private boolean validate() {
 		boolean isValid = true;
 		for(int i = 0; i < size; i++) {	
 			for(int j = i+1; j < size; j++) {
 				if(X[i] == X[j] && Y[i] == Y[j]) {
 					isValid = false;
-					System.out.println("invalid structure! REPEATING.");
+					//System.out.println("invalid structure! REPEATING.");
 					break;
 				}
 			}//end inner for
 		} //end outer for
 		return isValid;
 	}
-
+	/*
+	method: computeFitness
+	@returns fitness of this chromosome (between 0 and -2147483648)
+	*/
 	public int computeFitness() {
 		//compute initial fitness, assuming valid folds
 		for(int i = 0; i < this.sequence.length()-1; i++) {
 			if((this.sequence.charAt(i) == 'h') && (this.sequence.charAt(i+1) == 'h')) {
 				//fitness is negative and bonded black amino acids are guaranteed to reduce fitness.
-				fitness++;
+				this.fitness++;
 			}
 		}
 		//construct matrix structure
@@ -170,14 +179,14 @@ public class Chromosome {
 				if(chromosomeGraph[i][j]) {
 					//if 1 forward or 1 down is also black decrement fitness
 					if(chromosomeGraph[i+1][j])
-						fitness--;
+						this.fitness--;
 					if(chromosomeGraph[i][j+1])
-						fitness--;
+						this.fitness--;
 				}
 			}
 		}
-
-		visualizeChromosome();
+		//for testing
+		//visualizeChromosome();
 		return fitness;
 	}//end computeFitness
 
@@ -200,8 +209,8 @@ public class Chromosome {
 		//construct matrix structure for print testing vvvvvvvvvvvvvvvv
 		int[][] printableMatrix = new int[this.size*2][this.size*2];
 		//construct testing matrix
-		for(int i = 0; i < (size*2) - 1; i++){
-			for(int j = 0; j < size*2 - 1; j++) {
+		for(int i = 0; i < (size*2); i++){
+			for(int j = 0; j < size*2; j++) {
 				printableMatrix[i][j] = 2;
 			}
 		}
@@ -229,5 +238,12 @@ public class Chromosome {
     		System.out.print("\n");
 		} 
 	}//end visualizeChromosome
+
+	public int compareTo(Chromosome other) {
+		//ascending order
+		return this.fitness - other.getFitness();
+		//descending order
+		//return other.getFitness() - this.fitness;
+	}
 
 }//end Chromsome
