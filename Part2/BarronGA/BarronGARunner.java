@@ -56,10 +56,9 @@ public class BarronGARunner {
 		}
 
 		for(Chromosome chromosome : pop1) {
-			System.out.println(chromosome.getFitness());
+			System.out.printf("%s, ", chromosome.getFitness());
 		}
-
-
+		
 
 	} //end main
 
