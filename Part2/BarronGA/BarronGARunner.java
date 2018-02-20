@@ -1,6 +1,7 @@
 package BarronGA;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.io.*;
 
 /**
@@ -11,7 +12,6 @@ import java.io.*;
 
 /**
 TODO:
-	0. data structure for chromosome \
 	1. Initialization and validation (Pop1) \
 	2. Compute Fitness (Pop1, for all chromosome Ci)
 	3. Sort (Pop1)
@@ -25,16 +25,42 @@ TODO:
 **/
 
 public class BarronGARunner {
+	private static final String sequence = "hphpphhphpphphhpphph";
+	private static final int DesiredFitness = -8;
+	private static final int POPSIZE = 200;
+	//sorted by fitness. 
+	private static ArrayList<Chromosome> pop1;
+	//2nd generation
+	private static ArrayList<Chromosome> pop2;
 
 	public static void main(String[] args) {
+		//String sequence = args[0];
+		pop1 = new ArrayList<Chromosome>();
 
-	Integer test = 0;
-	test++;
-	System.out.println(test);
 
-	Chromosome testChrome = new Chromosome(10);
-	testChrome.initializeChrom();
-	System.out.print(testChrome);
-	}
+		//fill population 1 with chromosomes
+		//initialization and validation and compute fitness
+		for(int i = 0; i < POPSIZE; i++) {
+			Chromosome chromosome = new Chromosome(sequence);
+			chromosome.initializeChrom();
+			pop1.add(chromosome);
+		}//end for
+		//sort (pop1)
+		pop1.sort(null);
 
-}
+		//examine C1 progress. if desired reached, exit.
+		if((pop1.get(0)).getFitness() <= DesiredFitness) {
+			System.out.println("Desired Fitness reached. Program ended.");
+			System.out.println(pop1.get(0));
+			System.exit(0);
+		}
+
+		for(Chromosome chromosome : pop1) {
+			System.out.println(chromosome.getFitness());
+		}
+
+
+
+	} //end main
+
+}//end class
