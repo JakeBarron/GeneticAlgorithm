@@ -9,10 +9,8 @@ import java.io.*;
 	@Version 1.0
 	A genetic algorithm based structural search program.
 **/
-
 /**
 TODO:
-	1. Initialization and validation (Pop1) \
 	2. Compute Fitness (Pop1, for all chromosome Ci)
 	3. Sort (Pop1)
 	4. Examine: C1/Progress or Max_gen, Exit()?
@@ -23,7 +21,6 @@ TODO:
 	9. Pop1 <- Pop2; gen = gen+1
 	10. Go to Step #2.
 **/
-
 public class BarronGARunner {
 	private static final String sequence = "hphpphhphpphphhpphph";
 	private static final int DesiredFitness = -8;
@@ -33,10 +30,8 @@ public class BarronGARunner {
 	//2nd generation
 	private static ArrayList<Chromosome> pop2;
 
-	public static void main(String[] args) {
-		//String sequence = args[0];
-		pop1 = new ArrayList<Chromosome>();
-
+	public static void BeginGeneticAlgorithm(String sequence, String desiredFitness) {
+		pop1 = new ArrayList<>();
 
 		//fill population 1 with chromosomes
 		//initialization and validation and compute fitness
@@ -49,17 +44,12 @@ public class BarronGARunner {
 		pop1.sort(null);
 
 		//examine C1 progress. if desired reached, exit.
-		if((pop1.get(0)).getFitness() <= DesiredFitness) {
-			System.out.println("Desired Fitness reached. Program ended.");
-			System.out.println(pop1.get(0));
-			System.exit(0);
-		}
-
-		for(Chromosome chromosome : pop1) {
-			System.out.printf("%s, ", chromosome.getFitness());
-		}
-		
-
+//		if((pop1.get(0)).getFitness() <= DesiredFitness) {
+//			System.out.println("Desired Fitness reached. Program ended.");
+//			System.out.println(pop1.get(0));
+//			System.exit(0);
+//		}
+                System.out.println(pop1.get(0));
 	} //end main
 
 }//end class
