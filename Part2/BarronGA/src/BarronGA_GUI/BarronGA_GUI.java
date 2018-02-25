@@ -11,12 +11,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import BarronGA.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 /**
  *
  * @author Jake Barron
@@ -26,16 +28,12 @@ public class BarronGA_GUI extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("BarronGA");
-        primaryStage.setMinHeight(500);
-        primaryStage.setMinWidth(500);
         
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(15, 15, 15, 15)); 
-        gridPane.setMinHeight(primaryStage.getMinHeight());
-        gridPane.setMinWidth(primaryStage.getMinWidth());
         
         Label label1 = new Label("Sequence:");
         gridPane.add(label1, 0, 0);
@@ -48,47 +46,52 @@ public class BarronGA_GUI extends Application {
         TextField fitnessText = new TextField();
         gridPane.add(fitnessText, 3, 0);
         
-        Canvas canvas = new Canvas(gridPane.getMinWidth()*.80, gridPane.getMinHeight()*.80);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(gridPane);
+        
+        Canvas canvas = new Canvas(500, 500);
         GraphicsContext gc = canvas.getGraphicsContext2D();        
-        gridPane.add(canvas, 0, 1, 4, 4);   
+        borderPane.setCenter(canvas);   
         
         gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         
         Button startBtn = new Button("Start");
-        startBtn.setAlignment(Pos.BOTTOM_LEFT);
-        gridPane.add(startBtn, 0, 5);
         final Text actiontarget = new Text();
-        gridPane.add(actiontarget, 4, 5);
+        HBox buttonRow = new HBox(startBtn, actiontarget);
+        buttonRow.setAlignment(Pos.TOP_CENTER);
+        buttonRow.setMinWidth(canvas.getWidth());
+        buttonRow.setSpacing(50);
+        borderPane.setBottom(buttonRow);
         
-        //ACTION HANDLER
+        //ACTION HANDLE
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
            @Override
            public void handle(ActionEvent e) {
-               actiontarget.setFill(Color.RED);
-               actiontarget.setText("Processing . . .");
-               String sequence = sequenceText.getText();
-               int fitness = Integer.parseInt(fitnessText.getText());
-               Chromosome fittest = BarronGARunner.BeginGeneticAlgorithm(sequence, fitness);
-               //clear and refill background of canvas
-               gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-               gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-               //draw fittest chromosome
-               drawChromosome(gc, fittest);
+            actiontarget.setFill(Color.RED);
+            actiontarget.setText("Processing . . .");
+            String sequence = sequenceText.getText();
+            int fitness = Integer.parseInt(fitnessText.getText());
+            Chromosome fittest = BarronGARunner.BeginGeneticAlgorithm(sequence, fitness);
+            //clear and refill background of canvas
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            //draw fittest chromosome
+            drawChromosome(gc, fittest);
                
            }
         });
 
         //gridPane.setGridLinesVisible(true);
-        Scene scene = new Scene(gridPane, gridPane.getMinWidth(), gridPane.getMinHeight(), Color.RED);
+        Scene scene = new Scene(borderPane, 600, 600, Color.RED);
         primaryStage.setScene(scene);
         primaryStage.show();      
     }//end start
     
     public void drawChromosome(GraphicsContext gc, Chromosome chromosome) {
         //set line with and amino size when drawn
-        gc.setLineWidth(4);
-        int aminoSize = 15;
+        gc.setLineWidth(3);
+        int aminoSize = 12;
         //draw first amino acid at origin
         gc.setStroke(chromosome.getColor(0)? Color.BLACK : Color.WHITE);
         //get origin position and save for use in bond drawing
