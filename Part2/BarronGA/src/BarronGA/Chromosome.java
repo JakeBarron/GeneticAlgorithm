@@ -173,20 +173,21 @@ public class Chromosome implements Comparable<Chromosome> {
 
 		// //scan matrix to look for adjacent unbonded blacks
 		for(int i = 0; i < (size*2) - 1; i++){
-			for(int j = 0; j < size*2 - 1; j++) {
-				//if current amino acid is black
-				if(chromosomeGraph[i][j]) {
-					//if 1 forward or 1 down is also black decrement fitness
-					if(chromosomeGraph[i+1][j])
-						this.fitness--;
-					if(chromosomeGraph[i][j+1])
-						this.fitness--;
-				}
-			}
+                    for(int j = 0; j < size*2 - 1; j++) {
+                        //if current amino acid is black
+                        if(chromosomeGraph[i][j]) {
+                            //if 1 forward or 1 down is also black decrement fitness
+                            if(chromosomeGraph[i+1][j])
+                                    this.fitness--;
+                            if(chromosomeGraph[i][j+1])
+                                    this.fitness--;
+                        }
+                    }
 		}
 		//for testing
 		//visualizeChromosome();
-		return fitness;
+                //fitness is always double value
+		return fitness/2;
 	}//end computeFitness
 
 	private void colorSequence() {
@@ -197,11 +198,11 @@ public class Chromosome implements Comparable<Chromosome> {
 
 	@Override
 	public String toString() {
-		String string = "";
-		for(int c = 0; c < this.size; c++) {
-		string = string + String.format("| (%d, %d, %s) |\n", this.getX(c), this.getY(c), (this.getColor(c) ? "black" : "white"));
-		}
-		return string;
+            String string = "";
+            for(int c = 0; c < this.size; c++) {
+            string = string + String.format("| (%d, %d, %s) |\n", this.getX(c), this.getY(c), (this.getColor(c) ? "black" : "white"));
+            }
+            return string;
 	}
 
 	public void visualizeChromosome() {

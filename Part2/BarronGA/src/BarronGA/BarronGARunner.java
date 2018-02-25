@@ -1,8 +1,6 @@
 package BarronGA;
 
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.*;
 
 /**
 	@Author Jake Barron
@@ -21,6 +19,8 @@ TODO:
 	9. Pop1 <- Pop2; gen = gen+1
 	10. Go to Step #2.
 **/
+import java.util.Observable;
+import java.util.Observer;
 public class BarronGARunner {
 	private static final String sequence = "hphpphhphpphphhpphph";
 	private static final int DesiredFitness = -8;
@@ -30,7 +30,7 @@ public class BarronGARunner {
 	//2nd generation
 	private static ArrayList<Chromosome> pop2;
 
-	public static void BeginGeneticAlgorithm(String sequence, String desiredFitness) {
+	public static Chromosome BeginGeneticAlgorithm(String sequence, int desiredFitness) {
 		pop1 = new ArrayList<>();
 
 		//fill population 1 with chromosomes
@@ -50,6 +50,10 @@ public class BarronGARunner {
 //			System.exit(0);
 //		}
                 System.out.println(pop1.get(0));
+                System.out.println("Fitness: " + pop1.get(0).computeFitness());
+                
+                return pop1.get(0);
 	} //end main
+        
 
 }//end class
