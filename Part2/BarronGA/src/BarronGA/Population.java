@@ -27,5 +27,4 @@ public class Population {
         pop.add(chrom);
     }
     
-    
 }
