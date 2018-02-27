@@ -169,7 +169,7 @@ public class Chromosome implements Comparable<Chromosome> {
 		validate
 		@returns isValid whether or not the structure is legal
 	*/
-	private boolean validate() {
+	public boolean validate() {
 		boolean isValid = true;
 		for(int i = 0; i < size; i++) {	
 			for(int j = i+1; j < size; j++) {
@@ -226,25 +226,70 @@ public class Chromosome implements Comparable<Chromosome> {
 			color[i] = (this.sequence.charAt(i) == 'h');
 		}
 	}
-        
+      //CROSSOVER  
         public Chromosome crossover(Chromosome other) {
             Chromosome crossed = new Chromosome(this);
             int fixedPoint = random.nextInt(this.size-2) + 2;
-            //rotate 90% counter-clockwise
-            for(int p = fixedPoint+1; p < other.getSize(); p++) {
-                //move other points to origin
-                crossed.X[p] = other.X[p] - other.X[fixedPoint];
-                crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
-                //rotate
-                int tempX = crossed.Y[p]*-1;
-                int tempY = crossed.X[p];
-                crossed.X[p] = tempX;
-                crossed.Y[p] = tempY;
-                //move back to fixed point
-                crossed.X[p] += this.X[fixedPoint];
-                crossed.Y[p] += this.Y[fixedPoint];
-            }
-            return crossed;
+            int direction = 0;
+            do {
+                if(direction == 0){
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        crossed.X[p] = other.X[p];
+                        crossed.Y[p] = other.Y[p];
+                    }
+                    return crossed;
+                } else if(direction == 1) {
+                    //rotate 90 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.Y[p]*-1;
+                        int tempY = crossed.X[p];
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    } 
+                    return crossed;
+                } else if(direction == 2) {
+                    //rotate 180 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.X[p]*-1;
+                        int tempY = crossed.Y[p]*-1;
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    }
+                    return crossed;
+                } else if(direction == 3) {
+                    //rotate 270 degrees
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.Y[p];
+                        int tempY = crossed.X[p]*-1;
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    }
+                    return crossed;
+                }
+                direction++;
+            }while(crossed.validate() || direction >= 4);
+                return null;
         } //end crossover
 
 	@Override

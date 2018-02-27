@@ -72,13 +72,8 @@ public class BarronGA_GUI extends Application {
             actiontarget.setText("Processing . . .");
             String sequence = sequenceText.getText();
             int fitness = Integer.parseInt(fitnessText.getText());
-            Chromosome fittest = BarronGARunner.BeginGeneticAlgorithm(sequence, fitness);
-            //clear and refill background of canvas
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            //draw fittest chromosome
-            drawChromosome(gc, fittest);
-               
+            GeneticAlgorithm(sequence, fitness, gc);
+
            }
         });
 
@@ -102,8 +97,8 @@ public class BarronGA_GUI extends Application {
         for(int i = 1; i < chromosome.getSize(); i++) {
             if(chromosome.getColor(i)) {
                 gc.setStroke(Color.BLACK);
-                double xPos = (0 + (gc.getCanvas().getWidth())*.5 + chromosome.getX(i)*2*aminoSize);
-                double yPos = (0 + (gc.getCanvas().getHeight())*.5 + chromosome.getY(i)*2*aminoSize);
+                double xPos = (gc.getCanvas().getWidth()*.5) + (chromosome.getX(i)*2*aminoSize);
+                double yPos = (gc.getCanvas().getHeight()*.5) - (chromosome.getY(i)*2*aminoSize);
                 gc.strokeOval(xPos, yPos, aminoSize, aminoSize); 
                 gc.setStroke(Color.RED);
                 gc.strokeLine(lastXPos+aminoSize/2, lastYPos+aminoSize/2, xPos+aminoSize/2, yPos+aminoSize/2);
@@ -112,8 +107,8 @@ public class BarronGA_GUI extends Application {
                 
             } else {
                 gc.setStroke(Color.WHITE);
-                double xPos = (0 + (gc.getCanvas().getWidth())*.5 + chromosome.getX(i)*2*aminoSize);
-                double yPos = (0 + (gc.getCanvas().getHeight())*.5 + chromosome.getY(i)*2*aminoSize);
+                double xPos = (gc.getCanvas().getWidth()*.5) + (chromosome.getX(i)*2*aminoSize);
+                double yPos = (gc.getCanvas().getHeight()*.5) - chromosome.getY(i)*2*aminoSize;
                 gc.strokeOval(xPos, yPos, aminoSize, aminoSize); 
                 gc.setStroke(Color.RED);
                 gc.strokeLine(lastXPos+aminoSize/2, lastYPos+aminoSize/2, xPos+aminoSize/2, yPos+aminoSize/2);
@@ -121,7 +116,29 @@ public class BarronGA_GUI extends Application {
                 lastYPos = yPos;
             }
         }
+    }//end drawChromosome
+    public static Chromosome GeneticAlgorithm(String sequence, int desiredFitness, GraphicsContext gc) {
+        //initialize
+        
+        //compute fitness
+        
+        //sort
+
+        //examine
+        
+        //get elite
+        
+        //crossover
+        
+        //fillup pop 2 with remaining
+        
+        //mutate pop 2 non elite
+        
+        //pop1 now equals pop2 gen = gen+1
+        
+        //go to step 2
+        
+        return null;
     }
-    
 }
 // (0,0) (Canvas.Width, Canvas.Height)
