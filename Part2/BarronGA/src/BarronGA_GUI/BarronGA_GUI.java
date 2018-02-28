@@ -132,7 +132,7 @@ public class BarronGA_GUI extends Application {
         final double ELITES = 0.10;
         final double MUT_RATE = 0.10;
         
-        final int POP_SIZE = 10;
+        final int POP_SIZE = 100;
         final int DF = desiredFitness;
  
         Population pop1 = new Population(POP_SIZE);

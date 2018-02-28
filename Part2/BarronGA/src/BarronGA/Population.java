@@ -38,14 +38,25 @@ public class Population {
     public Chromosome getChromosome(int index) {
         return pop.get(index);
     }
+    
+    public int calculateTotalFitness() {
+        int temp = 0;
+        for(int i = 0; i <this.pop.size(); i++) {
+            temp += this.pop.get(i).getFitness();
+        }
+        this.totalFitness = temp;
+        return temp;
+    }
     //returns a chromosome in the population based on roulette wheel selection
     public Chromosome RouletteSelect() {
-        int roulette = random.nextInt(Math.abs(this.totalFitness));
+        this.calculateTotalFitness();
+        int roulette = random.nextInt(Math.abs(this.totalFitness)-1);
         int index = 0;
-        while(roulette < 0) {
-            roulette = pop.get(index).getFitness();
-        }
-        return null;
+        while(roulette > 0) {
+            roulette = roulette + pop.get(index).getFitness();
+            index++;
+        }   
+        return this.pop.get(index);
     }
     
     

@@ -39,7 +39,8 @@ public class Chromosome implements Comparable<Chromosome> {
                 this.Y[i] = other.getY(i);
                 this.color[i] = other.getColor(i);
                 this.folds[i] = other.getFold(i);
-            }  
+            }
+            this.computeFitness();
         }//end copy constructor
 
 	public int getX(int index) {
@@ -100,45 +101,45 @@ public class Chromosome implements Comparable<Chromosome> {
                 //Valid next direction depends on previous direction
                 for(int i = 2; i < size; i++) {
                         if(lastDirection == 1) {
-                                int choice = random.nextInt(3);
-                                switch(choice) {
-                                        case 0: nextDirection = 1;
-                                                        break;
-                                        case 1: nextDirection = 3;
-                                                        break;
-                                        case 2: nextDirection = 4;
-                                                        break;
-                                } //end switch		
+                            int choice = random.nextInt(3);
+                            switch(choice) {
+                                    case 0: nextDirection = 1;
+                                            break;
+                                    case 1: nextDirection = 3;
+                                            break;
+                                    case 2: nextDirection = 4;
+                                            break;
+                            } //end switch		
                         } else if(lastDirection == 2) {
-                                int choice = random.nextInt(3);
-                                switch(choice) {
-                                        case 0: nextDirection = 2;
-                                                        break;
-                                        case 1: nextDirection = 3;
-                                                        break;
-                                        case 2: nextDirection = 4;
-                                                        break;
-                                } //end switch
+                            int choice = random.nextInt(3);
+                            switch(choice) {
+                                    case 0: nextDirection = 2;
+                                            break;
+                                    case 1: nextDirection = 3;
+                                            break;
+                                    case 2: nextDirection = 4;
+                                            break;
+                            } //end switch
 
                         } else if(lastDirection == 3) {
-                                int choice = random.nextInt(3);
-                                switch(choice) {
-                                    case 0: nextDirection = 1;
-                                                    break;
-                                    case 1: nextDirection = 2;
-                                                    break;
-                                    case 2: nextDirection = 3;
-                                                    break;
-                                } //end switch
+                            int choice = random.nextInt(3);
+                            switch(choice) {
+                                case 0: nextDirection = 1;
+                                        break;
+                                case 1: nextDirection = 2;
+                                        break;
+                                case 2: nextDirection = 3;
+                                        break;
+                            } //end switch
                             } else if(lastDirection == 4) {
                                 int choice = random.nextInt(3);
                                 switch(choice) {
                                     case 0: nextDirection = 1;
-                                                    break;
+                                            break;
                                     case 1: nextDirection = 2;
-                                                    break;
+                                            break;
                                     case 2: nextDirection = 4;
-                                                    break;
+                                            break;
                                 }//end switch	
                             } //end if else
                             //switch for next direction
@@ -174,9 +175,9 @@ public class Chromosome implements Comparable<Chromosome> {
 		for(int i = 0; i < size; i++) {	
 			for(int j = i+1; j < size; j++) {
 				if(X[i] == X[j] && Y[i] == Y[j]) {
-					isValid = false;
-					//System.out.println("invalid structure! REPEATING.");
-					break;
+                                    isValid = false;
+                                    //System.out.println("invalid structure! REPEATING.");
+                                    break;
 				}
 			}//end inner for
 		} //end outer for
@@ -187,21 +188,21 @@ public class Chromosome implements Comparable<Chromosome> {
 	@returns fitness of this chromosome (between 0 and -2147483648)
 	*/
 	public int computeFitness() {
+                this.fitness = 0;
 		//compute initial fitness, assuming valid folds
 		for(int i = 0; i < this.sequence.length()-1; i++) {
-			if((this.sequence.charAt(i) == 'h') && (this.sequence.charAt(i+1) == 'h')) {
-				//fitness is negative and bonded black amino acids are guaranteed to reduce fitness.
-				this.fitness++;
-			}
+                    if((this.sequence.charAt(i) == 'h') && (this.sequence.charAt(i+1) == 'h')) {
+                            //fitness is negative and bonded black amino acids are guaranteed to reduce fitness.
+                            this.fitness++;
+                    }
 		}
 		//construct matrix structure
 		boolean[][] chromosomeGraph = new boolean[this.size*2][this.size*2];
 		for(int i = 0; i < this.size; i++) {
-			if(color[i]) {
-				chromosomeGraph[X[i]+size][Y[i]+size] = true;
-			}
+                    if(color[i]) {
+                            chromosomeGraph[X[i]+size][Y[i]+size] = true;
+                    }
 		}
-
 		// //scan matrix to look for adjacent unbonded blacks
 		for(int i = 0; i < (size*2) - 1; i++){
                     for(int j = 0; j < size*2 - 1; j++) {
@@ -215,10 +216,7 @@ public class Chromosome implements Comparable<Chromosome> {
                         }
                     }
 		}
-		//for testing
-		//visualizeChromosome();
-                //fitness is always double value
-		return fitness/2;
+		return this.fitness;
 	}//end computeFitness
 
 	private void colorSequence() {
@@ -231,13 +229,19 @@ public class Chromosome implements Comparable<Chromosome> {
             Chromosome crossed = new Chromosome(this);
             int fixedPoint = random.nextInt(this.size-2) + 2;
             int direction = 0;
+            System.out.println(this);
+            System.out.println(other);
             do {
                 if(direction == 0){
                     for(int p = fixedPoint+1; p < other.getSize(); p++) {
-                        crossed.X[p] = other.X[p];
-                        crossed.Y[p] = other.Y[p];
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
                     }
-                    return crossed;
                 } else if(direction == 1) {
                     //rotate 90 degrees counter-clockwise
                     for(int p = fixedPoint+1; p < other.getSize(); p++) {
@@ -253,7 +257,6 @@ public class Chromosome implements Comparable<Chromosome> {
                         crossed.X[p] += this.X[fixedPoint];
                         crossed.Y[p] += this.Y[fixedPoint];
                     } 
-                    return crossed;
                 } else if(direction == 2) {
                     //rotate 180 degrees counter-clockwise
                     for(int p = fixedPoint+1; p < other.getSize(); p++) {
@@ -269,7 +272,6 @@ public class Chromosome implements Comparable<Chromosome> {
                         crossed.X[p] += this.X[fixedPoint];
                         crossed.Y[p] += this.Y[fixedPoint];
                     }
-                    return crossed;
                 } else if(direction == 3) {
                     //rotate 270 degrees
                     for(int p = fixedPoint+1; p < other.getSize(); p++) {
@@ -285,11 +287,14 @@ public class Chromosome implements Comparable<Chromosome> {
                         crossed.X[p] += this.X[fixedPoint];
                         crossed.Y[p] += this.Y[fixedPoint];
                     }
+                }
+                if(crossed.validate()) {
+                    crossed.computeFitness();
                     return crossed;
                 }
                 direction++;
-            }while(crossed.validate() || direction >= 4);
-                return null;
+            }while(direction > 4);
+                return new Chromosome(this);
         } //end crossover
 
 	@Override
