@@ -25,7 +25,22 @@ public class Chromosome implements Comparable<Chromosome> {
 		this.folds = new int[this.size];
 		this.sequence = sequence;
 		this.colorSequence();
-	}
+	}//end sequence constructor
+        //copy constructor
+        public Chromosome(Chromosome other) {
+            this.size = other.getSize();
+            this.X = new int[other.getSize()];
+            this.Y = new int[other.getSize()];
+            this.color = new boolean[other.getSize()];
+            this.folds= new int[other.getSize()];
+            this.sequence = other.getSequence();
+            for(int i = 0; i < other.getSize(); i++) {
+                this.X[i] = other.getX(i);
+                this.Y[i] = other.getY(i);
+                this.color[i] = other.getColor(i);
+                this.folds[i] = other.getFold(i);
+            }  
+        }//end copy constructor
 
 	public int getX(int index) {
 		return this.X[index];
@@ -46,10 +61,26 @@ public class Chromosome implements Comparable<Chromosome> {
 	public int[] getFolds() {
 		return this.folds;
 	}
+        
+        public int getFold(int index) {
+            return this.folds[index];
+        }
 
 	public int getFitness() {
 		return this.fitness;
 	}
+        
+        public String getSequence() {
+            return this.sequence;
+        }
+        
+        public void setX(int index, int x) {
+            X[index] = x;
+        }
+        
+        public void setY(int index, int y) {
+            X[index] = y;
+        }
 
 	//Method to give chromosome initial legal structure and then calls compute fitness
 	public void initializeChrom() {
@@ -65,80 +96,80 @@ public class Chromosome implements Comparable<Chromosome> {
 		int lastDirection = 1;
 		int nextDirection = 0;
 
-		do{
-			//Valid next direction depends on previous direction
-			for(int i = 2; i < size; i++) {
-				if(lastDirection == 1) {
-					int choice = random.nextInt(3);
-					switch(choice) {
-						case 0: nextDirection = 1;
-								break;
-						case 1: nextDirection = 3;
-								break;
-						case 2: nextDirection = 4;
-								break;
-					} //end switch		
-				} else if(lastDirection == 2) {
-					int choice = random.nextInt(3);
-					switch(choice) {
-						case 0: nextDirection = 2;
-								break;
-						case 1: nextDirection = 3;
-								break;
-						case 2: nextDirection = 4;
-								break;
-					} //end switch
+            do{
+                //Valid next direction depends on previous direction
+                for(int i = 2; i < size; i++) {
+                        if(lastDirection == 1) {
+                                int choice = random.nextInt(3);
+                                switch(choice) {
+                                        case 0: nextDirection = 1;
+                                                        break;
+                                        case 1: nextDirection = 3;
+                                                        break;
+                                        case 2: nextDirection = 4;
+                                                        break;
+                                } //end switch		
+                        } else if(lastDirection == 2) {
+                                int choice = random.nextInt(3);
+                                switch(choice) {
+                                        case 0: nextDirection = 2;
+                                                        break;
+                                        case 1: nextDirection = 3;
+                                                        break;
+                                        case 2: nextDirection = 4;
+                                                        break;
+                                } //end switch
 
-				} else if(lastDirection == 3) {
-					int choice = random.nextInt(3);
-					switch(choice) {
-						case 0: nextDirection = 1;
-								break;
-						case 1: nextDirection = 2;
-								break;
-						case 2: nextDirection = 3;
-								break;
-					} //end switch
-				} else if(lastDirection == 4) {
-					int choice = random.nextInt(3);
-					switch(choice) {
-						case 0: nextDirection = 1;
-								break;
-						case 1: nextDirection = 2;
-								break;
-						case 2: nextDirection = 4;
-								break;
-					}//end switch	
-				} //end if else
-				//switch for next direction
-				//System.out.println(nextDirection);
-				folds[i] = nextDirection;
-				switch(nextDirection) {
-					case 1: this.X[i] = (this.X[i-1]) + 1;
-							this.Y[i] = this.Y[i-1];
-							break;
-					case 2: this.X[i] = (this.X[i-1]) - 1;
-							this.Y[i] = this.Y[i-1];
-							break;
-					case 3: this.Y[i] = (this.Y[i-1]) + 1;
-							this.X[i] = this.X[i-1];
-							break;
-					case 4: this.Y[i] = (this.Y[i-1]) - 1;
-							this.X[i] = this.X[i-1];
-							break;
-				} //end switch for next direction
-				//set previous direction to next direction
-				lastDirection = nextDirection;
-			} //end for
-		}while(!validate());//end while
-		this.computeFitness();
+                        } else if(lastDirection == 3) {
+                                int choice = random.nextInt(3);
+                                switch(choice) {
+                                    case 0: nextDirection = 1;
+                                                    break;
+                                    case 1: nextDirection = 2;
+                                                    break;
+                                    case 2: nextDirection = 3;
+                                                    break;
+                                } //end switch
+                            } else if(lastDirection == 4) {
+                                int choice = random.nextInt(3);
+                                switch(choice) {
+                                    case 0: nextDirection = 1;
+                                                    break;
+                                    case 1: nextDirection = 2;
+                                                    break;
+                                    case 2: nextDirection = 4;
+                                                    break;
+                                }//end switch	
+                            } //end if else
+                            //switch for next direction
+                            //System.out.println(nextDirection);
+                            folds[i] = nextDirection;
+                            switch(nextDirection) {
+                                    case 1: this.X[i] = (this.X[i-1]) + 1;
+                                                    this.Y[i] = this.Y[i-1];
+                                                    break;
+                                    case 2: this.X[i] = (this.X[i-1]) - 1;
+                                                    this.Y[i] = this.Y[i-1];
+                                                    break;
+                                    case 3: this.Y[i] = (this.Y[i-1]) + 1;
+                                                    this.X[i] = this.X[i-1];
+                                                    break;
+                                    case 4: this.Y[i] = (this.Y[i-1]) - 1;
+                                                    this.X[i] = this.X[i-1];
+                                                    break;
+                            } //end switch for next direction
+                            //set previous direction to next direction
+                            lastDirection = nextDirection;
+                    } //end for
+            }while(!validate());//end while
+            this.computeFitness();
 	} //end initializeChrom
 
 	/*
 		validate
 		@returns isValid whether or not the structure is legal
 	*/
-	private boolean validate() {
+	public boolean validate() {
 		boolean isValid = true;
 		for(int i = 0; i < size; i++) {	
 			for(int j = i+1; j < size; j++) {
@@ -195,6 +226,71 @@ public class Chromosome implements Comparable<Chromosome> {
 			color[i] = (this.sequence.charAt(i) == 'h');
 		}
 	}
+      //CROSSOVER  
+        public Chromosome crossover(Chromosome other) {
+            Chromosome crossed = new Chromosome(this);
+            int fixedPoint = random.nextInt(this.size-2) + 2;
+            int direction = 0;
+            do {
+                if(direction == 0){
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        crossed.X[p] = other.X[p];
+                        crossed.Y[p] = other.Y[p];
+                    }
+                    return crossed;
+                } else if(direction == 1) {
+                    //rotate 90 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.Y[p]*-1;
+                        int tempY = crossed.X[p];
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    } 
+                    return crossed;
+                } else if(direction == 2) {
+                    //rotate 180 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.X[p]*-1;
+                        int tempY = crossed.Y[p]*-1;
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    }
+                    return crossed;
+                } else if(direction == 3) {
+                    //rotate 270 degrees
+                    for(int p = fixedPoint+1; p < other.getSize(); p++) {
+                        //move other points to origin
+                        crossed.X[p] = other.X[p] - other.X[fixedPoint];
+                        crossed.Y[p] = other.Y[p] - other.Y[fixedPoint];
+                        //rotate
+                        int tempX = crossed.Y[p];
+                        int tempY = crossed.X[p]*-1;
+                        crossed.X[p] = tempX;
+                        crossed.Y[p] = tempY;
+                        //move back to fixed point
+                        crossed.X[p] += this.X[fixedPoint];
+                        crossed.Y[p] += this.Y[fixedPoint];
+                    }
+                    return crossed;
+                }
+                direction++;
+            }while(crossed.validate() || direction >= 4);
+                return null;
+        } //end crossover
 
 	@Override
 	public String toString() {
@@ -238,7 +334,6 @@ public class Chromosome implements Comparable<Chromosome> {
     		System.out.print("\n");
 		} 
 	}//end visualizeChromosome
-
 	public int compareTo(Chromosome other) {
 		//ascending order
 		return this.fitness - other.getFitness();

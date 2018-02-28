@@ -72,13 +72,8 @@ public class BarronGA_GUI extends Application {
             actiontarget.setText("Processing . . .");
             String sequence = sequenceText.getText();
             int fitness = Integer.parseInt(fitnessText.getText());
-            Chromosome fittest = BarronGARunner.BeginGeneticAlgorithm(sequence, fitness);
-            //clear and refill background of canvas
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            //draw fittest chromosome
-            drawChromosome(gc, fittest);
-               
+            GeneticAlgorithm(sequence, fitness, gc);
+
            }
         });
 
@@ -89,6 +84,14 @@ public class BarronGA_GUI extends Application {
     }//end start
     
     public void drawChromosome(GraphicsContext gc, Chromosome chromosome) {
+        //clear and redraw canvas before drawing
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        //write fitness to canvas
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+        gc.strokeText("Fitness: " + chromosome.getFitness(), 10, 10, 100);
         //set line with and amino size when drawn
         gc.setLineWidth(3);
         int aminoSize = 12;
@@ -102,8 +105,8 @@ public class BarronGA_GUI extends Application {
         for(int i = 1; i < chromosome.getSize(); i++) {
             if(chromosome.getColor(i)) {
                 gc.setStroke(Color.BLACK);
-                double xPos = (0 + (gc.getCanvas().getWidth())*.5 + chromosome.getX(i)*2*aminoSize);
-                double yPos = (0 + (gc.getCanvas().getHeight())*.5 + chromosome.getY(i)*2*aminoSize);
+                double xPos = (gc.getCanvas().getWidth()*.5) + (chromosome.getX(i)*2*aminoSize);
+                double yPos = (gc.getCanvas().getHeight()*.5) - (chromosome.getY(i)*2*aminoSize);
                 gc.strokeOval(xPos, yPos, aminoSize, aminoSize); 
                 gc.setStroke(Color.RED);
                 gc.strokeLine(lastXPos+aminoSize/2, lastYPos+aminoSize/2, xPos+aminoSize/2, yPos+aminoSize/2);
@@ -112,15 +115,75 @@ public class BarronGA_GUI extends Application {
                 
             } else {
                 gc.setStroke(Color.WHITE);
-                double xPos = (0 + (gc.getCanvas().getWidth())*.5 + chromosome.getX(i)*2*aminoSize);
-                double yPos = (0 + (gc.getCanvas().getHeight())*.5 + chromosome.getY(i)*2*aminoSize);
+                double xPos = (gc.getCanvas().getWidth()*.5) + (chromosome.getX(i)*2*aminoSize);
+                double yPos = (gc.getCanvas().getHeight()*.5) - chromosome.getY(i)*2*aminoSize;
                 gc.strokeOval(xPos, yPos, aminoSize, aminoSize); 
                 gc.setStroke(Color.RED);
                 gc.strokeLine(lastXPos+aminoSize/2, lastYPos+aminoSize/2, xPos+aminoSize/2, yPos+aminoSize/2);
                 lastXPos = xPos;
                 lastYPos = yPos;
             }
+        }        
+    }//end drawChromosome
+    
+    public void GeneticAlgorithm(String sequence, int desiredFitness, GraphicsContext gc) {
+        //these 3 constants should add up to 1.0
+        final double CROSSOVER = 0.80;
+        final double ELITES = 0.10;
+        final double MUT_RATE = 0.10;
+        
+        final int POP_SIZE = 10;
+        final int DF = desiredFitness;
+ 
+        Population pop1 = new Population(POP_SIZE);
+        Population pop2 = new Population(POP_SIZE);
+        
+        //initialize pop 1
+        for(int i = 0; i < POP_SIZE; i++){
+            Chromosome chrom = new Chromosome(sequence);
+            chrom.initializeChrom();
+            pop1.addChromosome(chrom);
         }
+        
+        //draw fittest
+        //drawChromosome(gc, pop1.getFittest());
+
+        //examine
+        if(pop1.getFittest().getFitness() <= desiredFitness){
+            int fitness = pop1.getFittest().getFitness();
+            System.out.println("Fittest Found");
+            System.out.printf("Fittest chromosome fitness: %d", fitness);
+            System.out.println(pop1.getFittest());
+            System.exit(0);
+        }
+        
+        Chromosome test = pop1.RouletteSelect().crossover(pop1.RouletteSelect());
+        drawChromosome(gc, test);
+        
+//        //put elites from pop1
+//        int index = 0;
+//        while(index < (int)(POP_SIZE * ELITES)){
+//            pop2.addChromosome(pop1.getChromosome(index));
+//            index++;
+//        }  //end elite loop
+//        //crossover
+//        while(index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSSOVER)){
+//            //choose two mates with RouletteSelection and cross them over
+//            pop2.addChromosome(pop1.RouletteSelect().crossover(pop1.RouletteSelect()));
+//            index++;
+//        } //end crossover while loop
+        
+        //fillup pop 2 with remaining
+//        while(index < POP_SIZE) {
+//            pop2.addChromosome(pop1.getChromosome(index));
+//        }
+//        drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
+        //mutate pop 2 non elite
+        
+        //pop1 now equals pop2 gen = gen+1
+        
+        //go to step 2
+        
     }
     
 }
