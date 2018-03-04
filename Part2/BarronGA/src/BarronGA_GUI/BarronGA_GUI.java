@@ -127,12 +127,12 @@ public class BarronGA_GUI extends Application {
     }//end drawChromosome
     
     public void GeneticAlgorithm(String sequence, int desiredFitness, GraphicsContext gc) {
-        //these 3 constants should add up to 1.0
-        final double CROSSOVER = 0.80;
+        //these 3 constants must add up to 1.0
+        final double CROSS_RATE = 0.80;
         final double ELITES = 0.10;
         final double MUT_RATE = 0.10;
         
-        final int POP_SIZE = 10;
+        final int POP_SIZE = 100;
         final int DF = desiredFitness;
  
         Population pop1 = new Population(POP_SIZE);
@@ -149,42 +149,41 @@ public class BarronGA_GUI extends Application {
         //drawChromosome(gc, pop1.getFittest());
 
         //examine
-        if(pop1.getFittest().getFitness() <= desiredFitness){
-            int fitness = pop1.getFittest().getFitness();
-            System.out.println("Fittest Found");
-            System.out.printf("Fittest chromosome fitness: %d", fitness);
-            System.out.println(pop1.getFittest());
-            System.exit(0);
-        }
-        
-        Chromosome test = pop1.RouletteSelect().crossover(pop1.RouletteSelect());
-        drawChromosome(gc, test);
-        
-//        //put elites from pop1
-//        int index = 0;
-//        while(index < (int)(POP_SIZE * ELITES)){
-//            pop2.addChromosome(pop1.getChromosome(index));
-//            index++;
-//        }  //end elite loop
-//        //crossover
-//        while(index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSSOVER)){
-//            //choose two mates with RouletteSelection and cross them over
-//            pop2.addChromosome(pop1.RouletteSelect().crossover(pop1.RouletteSelect()));
-//            index++;
-//        } //end crossover while loop
-        
-        //fillup pop 2 with remaining
-//        while(index < POP_SIZE) {
-//            pop2.addChromosome(pop1.getChromosome(index));
-//        }
-//        drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
-        //mutate pop 2 non elite
-        
-        //pop1 now equals pop2 gen = gen+1
-        
-        //go to step 2
-        
-    }
+        while(pop1.getFittest().getFitness() > desiredFitness){
+            //drawChromosome(gc, pop1.getFittest());
+            System.out.println("Fitness: " + pop1.getFittest().getFitness());
+            //put elites from pop1 into pop2
+            int index = 0;
+            while(index < (int)(POP_SIZE * ELITES)){
+                pop2.setChromosome(index, pop1.getChromosome(index));
+                index++;
+            }  //end elite loop
+            //add crossover chromosomes based on crossover constant
+            while(index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE)){
+                //choose two mates with RouletteSelection and cross them over
+                pop2.setChromosome(index, pop1.RouletteSelect().crossover(pop1.RouletteSelect()));
+                index++;
+            } //end crossover while loop
+
+            //add mutated chromosomes based on mutation constant
+            while( index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE) + (int)(POP_SIZE * MUT_RATE) ){
+                pop2.setChromosome(index, pop1.getChromosome(index));
+                index++;
+            }
+            drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
+            //compare fitness of fittest individuals in pop1 and 2 if pop2 is fitter, set it to pop 1 and begin again.
+            pop1.sortPop(); pop2.sortPop();
+            if(pop1.getChromosome(0).getFitness() > pop2.getChromosome(0).getFitness()) {
+                System.out.println("pop2 fitter");
+                pop1 = pop2;
+            }
+        } //end while
+        int fitness = pop1.getFittest().getFitness();
+        System.out.println("Fittest Found");
+        System.out.printf("Fittest chromosome fitness: %d", fitness);
+        System.out.println(pop1.getFittest());
+        drawChromosome(gc, pop1.getFittest());
+    }//end main loop
     
 }
 // (0,0) (Canvas.Width, Canvas.Height)
