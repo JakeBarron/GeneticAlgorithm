@@ -25,6 +25,10 @@ public class Population {
         this.totalFitness = 0;
     }
     
+    public void sortPop() {
+        this.pop.sort(null);
+    }
+    
     public void addChromosome(Chromosome chrom) {
         pop.add(chrom);
         this.totalFitness += chrom.getFitness();
@@ -57,6 +61,10 @@ public class Population {
             index++;
         }   
         return this.pop.get(index);
+    }
+    //returns a random chromosome
+    public Chromosome getRandomChromosome() {
+        return pop.get(random.nextInt(this.pop.size()));
     }
     
     

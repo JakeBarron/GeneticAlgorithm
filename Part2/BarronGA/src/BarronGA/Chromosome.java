@@ -229,8 +229,6 @@ public class Chromosome implements Comparable<Chromosome> {
             Chromosome crossed = new Chromosome(this);
             int fixedPoint = random.nextInt(this.size-2) + 2;
             int direction = 0;
-            System.out.println(this);
-            System.out.println(other);
             do {
                 if(direction == 0){
                     for(int p = fixedPoint+1; p < other.getSize(); p++) {
@@ -296,6 +294,68 @@ public class Chromosome implements Comparable<Chromosome> {
             }while(direction > 4);
                 return new Chromosome(this);
         } //end crossover
+        
+        public Chromosome mutate() {
+            Chromosome mutated = new Chromosome(this);
+            int fixedPoint = random.nextInt(this.size-2) + 2;
+            int direction = 1;
+            do {
+                if(direction == 1) {
+                    //rotate 90 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < this.size; p++) {
+                        //move other points to origin
+                        mutated.X[p] = this.X[p] - this.X[fixedPoint];
+                        mutated.Y[p] = this.Y[p] - this.Y[fixedPoint];
+                        //rotate
+                        int tempX = mutated.Y[p]*-1;
+                        int tempY = mutated.X[p];
+                        mutated.X[p] = tempX;
+                        mutated.Y[p] = tempY;
+                        //move back to fixed point
+                        mutated.X[p] += this.X[fixedPoint];
+                        mutated.Y[p] += this.Y[fixedPoint];
+                    } 
+                } else if(direction == 2) {
+                    //rotate 180 degrees counter-clockwise
+                    for(int p = fixedPoint+1; p < this.size; p++) {
+                        //move other points to origin
+                        mutated.X[p] = this.X[p] - this.X[fixedPoint];
+                        mutated.Y[p] = this.Y[p] - this.Y[fixedPoint];
+                        //rotate
+                        int tempX = mutated.X[p]*-1;
+                        int tempY = mutated.Y[p]*-1;
+                        mutated.X[p] = tempX;
+                        mutated.Y[p] = tempY;
+                        //move back to fixed point
+                        mutated.X[p] += this.X[fixedPoint];
+                        mutated.Y[p] += this.Y[fixedPoint];
+                    }
+                } else if(direction == 3) {
+                    //rotate 270 degrees
+                    for(int p = fixedPoint+1; p < this.size; p++) {
+                        //move other points to origin
+                        mutated.X[p] = this.X[p] - this.X[fixedPoint];
+                        mutated.Y[p] = this.Y[p] - this.Y[fixedPoint];
+                        //rotate
+                        int tempX = mutated.Y[p];
+                        int tempY = mutated.X[p]*-1;
+                        mutated.X[p] = tempX;
+                        mutated.Y[p] = tempY;
+                        //move back to fixed point
+                        mutated.X[p] += this.X[fixedPoint];
+                        mutated.Y[p] += this.Y[fixedPoint];
+                    }
+                }
+                if(mutated.validate()) {
+                    //if mutated gene is valid, compute its fitness and return it
+                    mutated.computeFitness();
+                    return mutated;
+                }
+                direction++;
+            }while(direction > 4);
+            //if no valid folding exists, return original chromosome
+                return this;
+        }//end mutate
 
 	@Override
 	public String toString() {
@@ -339,6 +399,7 @@ public class Chromosome implements Comparable<Chromosome> {
     		System.out.print("\n");
 		} 
 	}//end visualizeChromosome
+        //natural order of chromosome is based on |fitness|
 	public int compareTo(Chromosome other) {
 		//ascending order
 		return this.fitness - other.getFitness();
