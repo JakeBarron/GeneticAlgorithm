@@ -155,24 +155,24 @@ public class BarronGA_GUI extends Application {
             //put elites from pop1 into pop2
             int index = 0;
             while(index < (int)(POP_SIZE * ELITES)){
-                pop2.addChromosome(pop1.getChromosome(index));
+                pop2.setChromosome(index, pop1.getChromosome(index));
                 index++;
             }  //end elite loop
             //add crossover chromosomes based on crossover constant
             while(index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE)){
                 //choose two mates with RouletteSelection and cross them over
-                pop2.addChromosome(pop1.RouletteSelect().crossover(pop1.RouletteSelect()));
+                pop2.setChromosome(index, pop1.RouletteSelect().crossover(pop1.RouletteSelect()));
                 index++;
             } //end crossover while loop
 
             //add mutated chromosomes based on mutation constant
             while( index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE) + (int)(POP_SIZE * MUT_RATE) ){
-                pop2.addChromosome(pop1.getChromosome(index));
+                pop2.setChromosome(index, pop1.getChromosome(index));
                 index++;
             }
             drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
             //compare fitness of fittest individuals in pop1 and 2 if pop2 is fitter, set it to pop 1 and begin again.
-            pop2.sortPop();
+            pop1.sortPop(); pop2.sortPop();
             if(pop1.getChromosome(0).getFitness() > pop2.getChromosome(0).getFitness()) {
                 System.out.println("pop2 fitter");
                 pop1 = pop2;

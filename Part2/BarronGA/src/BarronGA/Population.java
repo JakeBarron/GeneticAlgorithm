@@ -29,6 +29,11 @@ public class Population {
         this.pop.sort(null);
     }
     
+    public void setChromosome(int index, Chromosome newChrom) {
+        this.pop.add(index, newChrom);
+        this.pop.sort(null);
+    }
+    
     public void addChromosome(Chromosome chrom) {
         pop.add(chrom);
         this.totalFitness += chrom.getFitness();
