@@ -68,12 +68,9 @@ public class BarronGA_GUI extends Application {
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
            @Override
            public void handle(ActionEvent e) {
-            actiontarget.setFill(Color.RED);
-            actiontarget.setText("Processing . . .");
             String sequence = sequenceText.getText();
             int fitness = Integer.parseInt(fitnessText.getText());
             GeneticAlgorithm(sequence, fitness, gc);
-
            }
         });
 
@@ -132,7 +129,8 @@ public class BarronGA_GUI extends Application {
         final double ELITES = 0.10;
         final double MUT_RATE = 0.10;
         
-        final int POP_SIZE = 100;
+        final int ITERATIONS = 1000;
+        final int POP_SIZE = 200;
         final int DF = desiredFitness;
  
         Population pop1 = new Population(POP_SIZE);
@@ -149,9 +147,10 @@ public class BarronGA_GUI extends Application {
         //drawChromosome(gc, pop1.getFittest());
 
         //examine
-        while(pop1.getFittest().getFitness() > desiredFitness){
+        int counter = 0;
+        while(pop1.getFittest().getFitness() > desiredFitness && counter < ITERATIONS){
             //drawChromosome(gc, pop1.getFittest());
-            System.out.println("Fitness: " + pop1.getFittest().getFitness());
+           // System.out.println("Fitness: " + pop1.getFittest().getFitness());
             //put elites from pop1 into pop2
             int index = 0;
             while(index < (int)(POP_SIZE * ELITES)){
@@ -167,17 +166,19 @@ public class BarronGA_GUI extends Application {
 
             //add mutated chromosomes based on mutation constant
             while( index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE) + (int)(POP_SIZE * MUT_RATE) ){
-                pop2.setChromosome(index, pop1.getChromosome(index));
+                pop2.setChromosome(index, pop1.getChromosome(index).mutate());
                 index++;
             }
             drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
             //compare fitness of fittest individuals in pop1 and 2 if pop2 is fitter, set it to pop 1 and begin again.
             pop1.sortPop(); pop2.sortPop();
-            if(pop1.getChromosome(0).getFitness() > pop2.getChromosome(0).getFitness()) {
-                System.out.println("pop2 fitter");
+            if(pop1.getFittest().getFitness() >= pop2.getFittest().getFitness()) {
+                //System.out.println("pop2 fitter");
                 pop1 = pop2;
             }
+            counter++;
         } //end while
+        //print fittest chromosome info and draw
         int fitness = pop1.getFittest().getFitness();
         System.out.println("Fittest Found");
         System.out.printf("Fittest chromosome fitness: %d", fitness);
