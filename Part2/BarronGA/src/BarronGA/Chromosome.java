@@ -176,7 +176,6 @@ public class Chromosome implements Comparable<Chromosome> {
 			for(int j = i+1; j < size; j++) {
 				if(X[i] == X[j] && Y[i] == Y[j]) {
                                     isValid = false;
-                                    //System.out.println("invalid structure! REPEATING.");
                                     break;
 				}
 			}//end inner for
@@ -406,5 +405,4 @@ public class Chromosome implements Comparable<Chromosome> {
 		//descending order
 		//return other.getFitness() - this.fitness;
 	}
-
 }//end Chromsome
