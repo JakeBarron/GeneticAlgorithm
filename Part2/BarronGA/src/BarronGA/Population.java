@@ -1,7 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*@author Jake Barron
+  @version 04/05/2018
+   Class population
+    this object is used to manage a variable population of chromosomes.
  */
 package BarronGA;
 
@@ -28,17 +28,20 @@ public class Population {
     public void sortPop() {
         this.pop.sort(null);
     }
-    
+    //set chromosome based on an index, overwriting previous element
     public void setChromosome(int index, Chromosome newChrom) {
         this.pop.add(index, newChrom);
         this.pop.sort(null);
     }
-    
+    //appends a chromosome to the end of the population
     public void addChromosome(Chromosome chrom) {
         pop.add(chrom);
         this.totalFitness += chrom.getFitness();
     } 
-    
+    /*
+    @returns 1st element in population that is also fittest as the arraylist
+    is ordered in ascending order of fitness
+    */
     public Chromosome getFittest() {
         pop.sort(null);
         return pop.get(0);
@@ -48,6 +51,7 @@ public class Population {
         return pop.get(index);
     }
     
+    //@returns sum of fitness of all members of this population
     public int calculateTotalFitness() {
         int temp = 0;
         for(int i = 0; i <this.pop.size(); i++) {
@@ -56,7 +60,10 @@ public class Population {
         this.totalFitness = temp;
         return temp;
     }
-    //returns a chromosome in the population based on roulette wheel selection
+    /*
+    returns a chromosome in the population based on roulette wheel selection
+    the roulette wheel favors fitter individuals
+    */
     public Chromosome RouletteSelect() {
         this.calculateTotalFitness();
         int roulette = random.nextInt(Math.abs(this.totalFitness)-1);

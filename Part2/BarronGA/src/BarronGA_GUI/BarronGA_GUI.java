@@ -1,5 +1,6 @@
 package BarronGA_GUI;
 
+//javafx imports
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,17 +15,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import BarronGA.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+
+//Chromosome and population package
+import BarronGA.*;
 /**
- *
  * @author Jake Barron
+ * @version 04/05/2018
  */
 public class BarronGA_GUI extends Application {
 
+    /*
+    sets up initial stage adds buttons, text, and fills empty canvas
+    */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("BarronGA");
@@ -143,16 +148,12 @@ public class BarronGA_GUI extends Application {
             pop1.addChromosome(chrom);
         }
         
-        //draw fittest
-        //drawChromosome(gc, pop1.getFittest());
-
-        //examine
+        //counter to ensure non-deterministic algorithm will halt if no fittest
+        //can be reached
         int counter = 0;
         while(pop1.getFittest().getFitness() > desiredFitness && counter < ITERATIONS){
-            //drawChromosome(gc, pop1.getFittest());
-           // System.out.println("Fitness: " + pop1.getFittest().getFitness());
-            //put elites from pop1 into pop2
             int index = 0;
+            //put elites from pop1 into pop2 number carried over is based on ELITES constant
             while(index < (int)(POP_SIZE * ELITES)){
                 pop2.setChromosome(index, pop1.getChromosome(index));
                 index++;
@@ -164,18 +165,21 @@ public class BarronGA_GUI extends Application {
                 index++;
             } //end crossover while loop
 
-            //add mutated chromosomes based on mutation constant
+            //add mutated chromosomes to pop2 based on mutation constant
             while( index < (int)(POP_SIZE * ELITES) + (int)(POP_SIZE * CROSS_RATE) + (int)(POP_SIZE * MUT_RATE) ){
                 pop2.setChromosome(index, pop1.getChromosome(index).mutate());
                 index++;
             }
             drawChromosome(gc, pop2.getChromosome(POP_SIZE-1));
-            //compare fitness of fittest individuals in pop1 and 2 if pop2 is fitter, set it to pop 1 and begin again.
+            //compare fitness of fittest individuals in pop1 and 2 if pop2 is fitter or equal
+            //set it to pop 1 and begin again.
             pop1.sortPop(); pop2.sortPop();
             if(pop1.getFittest().getFitness() >= pop2.getFittest().getFitness()) {
                 //System.out.println("pop2 fitter");
                 pop1 = pop2;
             }
+            if(counter%100 == 0)
+                System.out.println(counter);
             counter++;
         } //end while
         //print fittest chromosome info and draw
